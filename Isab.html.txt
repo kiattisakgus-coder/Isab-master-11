@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>พากเพียร | ISAB The Master รุ่น 11</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;900&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #020d2e;
+    --blue-dark: #051a5e;
+    --blue-mid: #0a3494;
+    --blue-bright: #1565e8;
+    --cyan: #00c8ff;
+    --cyan-glow: rgba(0,200,255,0.15);
+    --white: #ffffff;
+    --white-soft: rgba(255,255,255,0.85);
+    --white-dim: rgba(255,255,255,0.4);
+    --card-bg: rgba(5, 26, 94, 0.5);
+    --card-border: rgba(0,200,255,0.25);
+    --glass: rgba(255,255,255,0.05);
+  }
+
+- { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+font-family: ‘Sarabun’, sans-serif;
+background: var(–navy);
+color: var(–white);
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Animated background network */
+#bg-canvas {
+position: fixed;
+top:0; left:0; width:100%; height:100%;
+z-index: 0;
+pointer-events: none;
+}
+
+.page { position: relative; z-index: 1; }
+
+/* ===== HEADER ===== */
+header {
+padding: 20px 24px 16px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid rgba(0,200,255,0.15);
+background: rgba(2,13,46,0.7);
+backdrop-filter: blur(20px);
+position: sticky; top:0; z-index: 100;
+}
+
+.logo-area { display:flex; align-items:center; gap:12px; }
+
+.isab-badge {
+background: linear-gradient(135deg, #1565e8, #00c8ff);
+color: white;
+font-family: ‘Kanit’, sans-serif;
+font-weight: 900;
+font-size: 18px;
+padding: 6px 12px;
+border-radius: 6px;
+letter-spacing: 1px;
+}
+
+.header-title {
+font-family: ‘Kanit’, sans-serif;
+font-weight: 700;
+font-size: 14px;
+color: var(–cyan);
+line-height: 1.3;
+}
+.header-title span { color: var(–white-dim); font-weight: 300; font-size: 11px; display:block; }
+
+.header-actions { display:flex; gap:10px; }
+
+.btn {
+font-family: ‘Kanit’, sans-serif;
+font-size: 13px;
+font-weight: 600;
+padding: 8px 18px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+transition: all 0.2s;
+letter-spacing: 0.5px;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #1565e8, #00c8ff);
+color: white;
+box-shadow: 0 0 20px rgba(0,200,255,0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(0,200,255,0.5); }
+
+.btn-ghost {
+background: var(–glass);
+border: 1px solid var(–card-border);
+color: var(–white-soft);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+/* ===== HERO ===== */
+.hero {
+text-align: center;
+padding: 50px 24px 40px;
+}
+
+.hero-label {
+display: inline-block;
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 3px;
+color: var(–cyan);
+text-transform: uppercase;
+border: 1px solid rgba(0,200,255,0.3);
+padding: 5px 16px;
+border-radius: 20px;
+margin-bottom: 20px;
+background: rgba(0,200,255,0.05);
+}
+
+.hero h1 {
+font-family: ‘Kanit’, sans-serif;
+font-weight: 900;
+font-size: clamp(36px, 8vw, 72px);
+line-height: 0.95;
+letter-spacing: -1px;
+background: linear-gradient(180deg, #fff 0%, #a8d4ff 60%, #00c8ff 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin-bottom: 10px;
+}
+
+.hero-sub {
+font-size: 14px;
+color: var(–white-dim);
+margin-bottom: 30px;
+font-weight: 300;
+}
+
+.hero-stats {
+display: flex;
+justify-content: center;
+gap: 40px;
+flex-wrap: wrap;
+}
+
+.stat {
+text-align: center;
+}
+.stat-num {
+font-family: ‘Kanit’, sans-serif;
+font-size: 28px;
+font-weight: 700;
+color: var(–cyan);
+display: block;
+}
+.stat-label { font-size: 11px; color: var(–white-dim); letter-spacing: 1px; }
+
+/* ===== SEARCH/FILTER ===== */
+.controls {
+padding: 0 20px 24px;
+display: flex;
+gap: 10px;
+max-width: 800px;
+margin: 0 auto;
+flex-wrap: wrap;
+}
+
+.search-box {
+flex: 1;
+min-width: 200px;
+background: var(–card-bg);
+border: 1px solid var(–card-border);
+border-radius: 10px;
+padding: 10px 16px;
+color: white;
+font-family: ‘Sarabun’, sans-serif;
+font-size: 14px;
+outline: none;
+transition: border-color 0.2s;
+}
+.search-box::placeholder { color: var(–white-dim); }
+.search-box:focus { border-color: var(–cyan); box-shadow: 0 0 15px rgba(0,200,255,0.1); }
+
+/* ===== PROFILE GRID ===== */
+.grid {
+padding: 0 20px 60px;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 16px;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+/* Empty slot */
+.card-empty {
+background: rgba(5,26,94,0.2);
+border: 1px dashed rgba(0,200,255,0.15);
+border-radius: 16px;
+padding: 28px 16px;
+text-align: center;
+cursor: pointer;
+transition: all 0.25s;
+min-height: 180px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+.card-empty:hover { border-color: rgba(0,200,255,0.4); background: rgba(5,26,94,0.4); }
+.card-empty .empty-icon { font-size: 28px; opacity: 0.3; }
+.card-empty .empty-text { font-size: 11px; color: var(–white-dim); letter-spacing: 1px; }
+
+/* Filled card */
+.card {
+background: var(–card-bg);
+border: 1px solid var(–card-border);
+border-radius: 16px;
+padding: 24px 16px 20px;
+text-align: center;
+cursor: pointer;
+transition: all 0.25s;
+position: relative;
+overflow: hidden;
+backdrop-filter: blur(10px);
+}
+.card::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(–cyan), transparent);
+opacity: 0;
+transition: opacity 0.25s;
+}
+.card:hover { transform: translateY(-3px); border-color: rgba(0,200,255,0.5); box-shadow: 0 8px 30px rgba(0,100,255,0.2); }
+.card:hover::before { opacity: 1; }
+
+.card-avatar {
+width: 70px;
+height: 70px;
+border-radius: 50%;
+margin: 0 auto 12px;
+background: linear-gradient(135deg, var(–blue-mid), var(–blue-bright));
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 30px;
+border: 2px solid rgba(0,200,255,0.3);
+position: relative;
+overflow: hidden;
+}
+.card-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+
+.card-name {
+font-family: ‘Kanit’, sans-serif;
+font-weight: 700;
+font-size: 15px;
+color: white;
+margin-bottom: 2px;
+line-height: 1.3;
+}
+.card-role {
+font-size: 11px;
+color: var(–cyan);
+margin-bottom: 8px;
+font-weight: 600;
+letter-spacing: 0.5px;
+}
+.card-tags {
+display: flex;
+flex-wrap: wrap;
+gap: 4px;
+justify-content: center;
+margin-top: 8px;
+}
+.tag {
+font-size: 10px;
+padding: 2px 8px;
+border-radius: 10px;
+background: rgba(21,101,232,0.3);
+border: 1px solid rgba(0,200,255,0.2);
+color: var(–white-soft);
+}
+
+.card-number {
+position: absolute;
+top: 8px; right: 10px;
+font-size: 10px;
+color: var(–white-dim);
+font-family: ‘Kanit’, sans-serif;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+position: fixed; inset: 0;
+background: rgba(2,13,46,0.85);
+backdrop-filter: blur(10px);
+z-index: 200;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+background: linear-gradient(160deg, #051a5e 0%, #020d2e 100%);
+border: 1px solid rgba(0,200,255,0.3);
+border-radius: 20px;
+width: 100%;
+max-width: 480px;
+max-height: 90vh;
+overflow-y: auto;
+transform: scale(0.95);
+transition: transform 0.25s;
+box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,100,255,0.2);
+}
+.modal-overlay.open .modal { transform: scale(1); }
+
+.modal-header {
+padding: 24px 24px 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+.modal-title {
+font-family: ‘Kanit’, sans-serif;
+font-size: 18px;
+font-weight: 700;
+color: var(–cyan);
+}
+.modal-close {
+background: rgba(255,255,255,0.1);
+border: none;
+color: white;
+width: 30px; height: 30px;
+border-radius: 8px;
+cursor: pointer;
+font-size: 16px;
+display: flex; align-items:center; justify-content:center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.2); }
+
+.modal-body { padding: 0 24px 24px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+display: block;
+font-size: 12px;
+font-weight: 600;
+color: var(–cyan);
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+.form-input, .form-textarea, .form-select {
+width: 100%;
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(0,200,255,0.2);
+border-radius: 10px;
+padding: 10px 14px;
+color: white;
+font-family: ‘Sarabun’, sans-serif;
+font-size: 14px;
+outline: none;
+transition: border-color 0.2s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+border-color: var(–cyan);
+box-shadow: 0 0 10px rgba(0,200,255,0.1);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select option { background: #051a5e; }
+
+.emoji-picker {
+display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;
+}
+.emoji-opt {
+width: 42px; height: 42px;
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(0,200,255,0.2);
+border-radius: 10px;
+font-size: 22px;
+cursor: pointer;
+display: flex; align-items:center; justify-content:center;
+transition: all 0.15s;
+}
+.emoji-opt:hover, .emoji-opt.selected {
+background: rgba(0,200,255,0.15);
+border-color: var(–cyan);
+transform: scale(1.1);
+}
+
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+
+.modal-footer { padding: 0 24px 24px; display:flex; gap:10px; }
+
+/* ===== PROFILE VIEW MODAL ===== */
+.profile-view {
+text-align: center;
+padding: 10px 0 20px;
+}
+.profile-view-avatar {
+width: 90px; height: 90px;
+border-radius: 50%;
+margin: 0 auto 16px;
+background: linear-gradient(135deg, var(–blue-mid), var(–blue-bright));
+display: flex; align-items:center; justify-content:center;
+font-size: 44px;
+border: 3px solid var(–cyan);
+box-shadow: 0 0 30px rgba(0,200,255,0.3);
+overflow: hidden;
+}
+.profile-view-avatar img { width:100%; height:100%; object-fit:cover; }
+.profile-view-name {
+font-family: ‘Kanit’, sans-serif;
+font-size: 22px;
+font-weight: 700;
+margin-bottom: 4px;
+}
+.profile-view-role { color: var(–cyan); font-size: 13px; margin-bottom: 20px; }
+.profile-info-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+text-align: left;
+margin-bottom: 16px;
+}
+.profile-info-item {
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(0,200,255,0.12);
+border-radius: 10px;
+padding: 10px 12px;
+}
+.profile-info-label { font-size: 10px; color: var(–cyan); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.profile-info-value { font-size: 13px; color: var(–white-soft); }
+.profile-funfact {
+background: rgba(21,101,232,0.15);
+border: 1px solid rgba(0,200,255,0.2);
+border-radius: 12px;
+padding: 12px 16px;
+font-size: 13px;
+color: var(–white-soft);
+text-align: left;
+line-height: 1.6;
+margin-bottom: 16px;
+}
+.profile-funfact-label { font-size: 10px; color: var(–cyan); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.profile-contact {
+font-size: 13px;
+color: var(–cyan);
+word-break: break-all;
+}
+
+/* ===== TOAST ===== */
+.toast {
+position: fixed;
+bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+background: linear-gradient(135deg, #1565e8, #00c8ff);
+color: white;
+font-family: ‘Kanit’, sans-serif;
+font-size: 14px;
+padding: 10px 24px;
+border-radius: 30px;
+z-index: 300;
+opacity: 0;
+transition: all 0.3s;
+pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,200,255,0.3); border-radius: 2px; }
+
+@media (max-width: 500px) {
+.grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.hero-stats { gap: 24px; }
+.profile-info-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="page">
+  <!-- Header -->
+  <header>
+    <div class="logo-area">
+      <div class="isab-badge">iSAB</div>
+      <div class="header-title">
+        THE MASTER รุ่น 11
+        <span>กลุ่มพากเพียร • 30 คน</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openAddModal()">+ เพิ่มโปรไฟล์</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+
+  <div class="hero">
+    <div class="hero-label">หลักสูตรนักบริหารยุทธศาสตร์ธุรกิจเชิงบวก</div>
+    <h1>พากเพียร</h1>
+    <p class="hero-sub">ISAB The Master • รุ่น 11 • กลุ่มพากเพียร</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num" id="count-filled">0</span>
+        <div class="stat-label">กรอกแล้ว</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num">30</span>
+        <div class="stat-label">สมาชิกทั้งหมด</div>
+      </div>
+      <div class="stat">
+        <span class="stat-num">16</span>
+        <div class="stat-label">สัปดาห์</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+
+  <div class="controls">
+    <input class="search-box" type="text" placeholder="🔍  ค้นหาชื่อหรือความสนใจ..." oninput="filterCards(this.value)">
+  </div>
+
+  <!-- Grid -->
+
+  <div class="grid" id="profile-grid"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-form-title">✦ เพิ่มโปรไฟล์ของคุณ</div>
+      <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">รูปโปรไฟล์</label>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+          <div id="avatar-preview" style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#0a3494,#1565e8);border:2px solid rgba(0,200,255,0.4);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;flex-shrink:0;">👤</div>
+          <div style="flex:1">
+            <label style="display:block;background:rgba(255,255,255,0.05);border:1px dashed rgba(0,200,255,0.35);border-radius:10px;padding:10px 14px;cursor:pointer;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(0,200,255,0.7)'" onmouseout="this.style.borderColor='rgba(0,200,255,0.35)'">
+              <span style="font-size:20px">📷</span>
+              <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px">อัปโหลดรูปถ่าย</div>
+              <input type="file" id="f-photo" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+            </label>
+          </div>
+        </div>
+        <div style="margin-bottom:6px;font-size:11px;color:rgba(0,200,255,0.7);letter-spacing:1px;text-transform:uppercase">หรือเลือก Avatar</div>
+        <div class="emoji-picker" id="emoji-picker"></div>
+      </div>
+
+```
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label">ชื่อ-นามสกุล *</label>
+      <input class="form-input" id="f-name" type="text" placeholder="ชื่อ นามสกุล">
+    </div>
+    <div class="form-group">
+      <label class="form-label">ชื่อเล่น</label>
+      <input class="form-input" id="f-nick" type="text" placeholder="ชื่อเล่น">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ตำแหน่ง / อาชีพ</label>
+    <input class="form-input" id="f-role" type="text" placeholder="เช่น CEO, Founder, Director...">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">บริษัท / องค์กร</label>
+    <input class="form-input" id="f-company" type="text" placeholder="ชื่อบริษัทหรือองค์กร">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ความสนใจ (คั่นด้วย ,)</label>
+    <input class="form-input" id="f-interests" type="text" placeholder="เช่น Leadership, Finance, Marketing">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">เป้าหมายในคอร์สนี้</label>
+    <input class="form-input" id="f-goal" type="text" placeholder="สิ่งที่อยากได้จากการเรียน...">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Fun Fact เกี่ยวกับตัวเอง</label>
+    <textarea class="form-textarea" id="f-funfact" placeholder="บอกเล่าเรื่องราวหรือสิ่งที่น่าสนใจเกี่ยวกับตัวคุณ..."></textarea>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">ช่องทางติดต่อ (LINE / IG / Tel)</label>
+    <input class="form-input" id="f-contact" type="text" placeholder="@line_id หรือ 08x-xxx-xxxx">
+  </div>
+
+  <input type="hidden" id="f-slot">
+  <input type="hidden" id="f-emoji" value="👤">
+  <input type="hidden" id="f-photo-data" value="">
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" style="flex:1" onclick="saveProfile()">บันทึกโปรไฟล์</button>
+  <button class="btn btn-ghost" onclick="closeModal('add-modal')">ยกเลิก</button>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- Profile View Modal -->
+
+<div class="modal-overlay" id="view-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">โปรไฟล์สมาชิก</div>
+      <button class="modal-close" onclick="closeModal('view-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="view-content"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" style="flex:1" id="btn-edit-profile" onclick="editFromView()">แก้ไขโปรไฟล์</button>
+      <button class="btn btn-ghost" onclick="closeModal('view-modal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== BACKGROUND CANVAS =====
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let nodes = [], W, H;
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); initNodes(); });
+
+function initNodes() {
+  nodes = [];
+  const count = Math.floor((W * H) / 18000);
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 2 + 1
+    });
+  }
+}
+initNodes();
+
+function drawBg() {
+  ctx.clearRect(0, 0, W, H);
+  // gradient bg
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#020d2e');
+  grad.addColorStop(0.5, '#051a5e');
+  grad.addColorStop(1, '#020d2e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // connections
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 150) {
+        ctx.strokeStyle = `rgba(0,200,255,${0.08 * (1 - d/150)})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // nodes
+  nodes.forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,200,255,0.4)';
+    ctx.fill();
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+  });
+
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ===== DATA =====
+const TOTAL = 30;
+const AT_TOKEN = 'patplLdvLIO0Ru2ky.6645c455853dde56143cb5771c1c5a313f527d0dde48f3d2bf172980012e80d1';
+const AT_BASE = 'appont3DUzrY3w8CI';
+const AT_TABLE = 'tblaZ1lrdFxlg0w';
+const AT_URL = `https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
+const AT_HEADERS = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
+
+let profiles = {};
+let recordMap = {}; // slot -> airtable record id
+
+async function loadProfiles() {
+  try {
+    showToast('⏳ กำลังโหลดข้อมูล...');
+    let offset = '';
+    let allRecords = [];
+    do {
+      const url = AT_URL + '?pageSize=100' + (offset ? `&offset=${offset}` : '');
+      const res = await fetch(url, { headers: AT_HEADERS });
+      const data = await res.json();
+      if (data.records) allRecords = allRecords.concat(data.records);
+      offset = data.offset || '';
+    } while (offset);
+
+    profiles = {};
+    recordMap = {};
+    allRecords.forEach(rec => {
+      const f = rec.fields;
+      const slot = parseInt(f.slot);
+      if (slot) {
+        profiles[slot] = {
+          name: f.name || '', nick: f.nick || '', role: f.role || '',
+          company: f.company || '', interests: f.interests || '',
+          goal: f.goal || '', funfact: f.funfact || '',
+          contact: f.contact || '', emoji: f.emoji || '👤', photo: f.photo || ''
+        };
+        recordMap[slot] = rec.id;
+      }
+    });
+  } catch (e) { console.error(e); }
+  renderGrid();
+}
+
+async function saveProfiles(slot) {
+  const p = profiles[slot];
+  const fields = {
+    slot: String(slot), name: p.name, nick: p.nick, role: p.role,
+    company: p.company, interests: p.interests, goal: p.goal,
+    funfact: p.funfact, contact: p.contact, emoji: p.emoji, photo: p.photo
+  };
+
+  try {
+    if (recordMap[slot]) {
+      // UPDATE existing record
+      await fetch(`${AT_URL}/${recordMap[slot]}`, {
+        method: 'PATCH',
+        headers: AT_HEADERS,
+        body: JSON.stringify({ fields })
+      });
+    } else {
+      // CREATE new record
+      const res = await fetch(AT_URL, {
+        method: 'POST',
+        headers: AT_HEADERS,
+        body: JSON.stringify({ fields })
+      });
+      const data = await res.json();
+      if (data.id) recordMap[slot] = data.id;
+    }
+  } catch (e) { console.error(e); showToast('❌ บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง'); }
+}
+
+// ===== EMOJIS =====
+const EMOJIS = ['👨‍💼','👩‍💼','🧑‍💼','👨‍🏫','👩‍🏫','🧑‍🏫','👨‍💻','👩‍💻','👨‍🔬','👩‍🔬','🧑‍🎨','👨‍🎤','👩‍🎤','🦁','🐯','🦊','🦋','🌟','🔥','💫','⚡','🎯','🚀','💎','🏆'];
+
+function initEmojiPicker() {
+  const picker = document.getElementById('emoji-picker');
+  picker.innerHTML = EMOJIS.map(e =>
+    `<div class="emoji-opt" onclick="selectEmoji('${e}')">${e}</div>`
+  ).join('');
+}
+
+function handlePhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    document.getElementById('f-photo-data').value = dataUrl;
+    document.getElementById('f-emoji').value = '';
+    // update preview
+    const preview = document.getElementById('avatar-preview');
+    preview.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    // deselect emoji
+    document.querySelectorAll('.emoji-opt').forEach(el => el.classList.remove('selected'));
+  };
+  reader.readAsDataURL(file);
+}
+
+function selectEmoji(e) {
+  document.getElementById('f-emoji').value = e;
+  document.getElementById('f-photo-data').value = '';
+  // update preview
+  const preview = document.getElementById('avatar-preview');
+  if (preview) preview.innerHTML = e;
+  document.querySelectorAll('.emoji-opt').forEach(el => el.classList.toggle('selected', el.textContent === e));
+}
+
+// ===== RENDER =====
+function renderGrid(filter = '') {
+  const grid = document.getElementById('profile-grid');
+  grid.innerHTML = '';
+  let filled = 0;
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const p = profiles[i];
+    if (p) filled++;
+
+    if (filter) {
+      if (!p) continue;
+      const q = filter.toLowerCase();
+      const searchable = `${p.name} ${p.nick} ${p.role} ${p.company} ${p.interests}`.toLowerCase();
+      if (!searchable.includes(q)) continue;
+    }
+
+    if (!p) {
+      grid.innerHTML += `
+        <div class="card-empty" onclick="openAddModal(${i})">
+          <div class="empty-icon">+</div>
+          <div class="empty-text">สมาชิก #${i}</div>
+        </div>`;
+    } else {
+      const tags = (p.interests || '').split(',').slice(0, 3).map(t => t.trim()).filter(Boolean);
+      const avatarContent = p.photo 
+        ? `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+        : (p.emoji || '👤');
+      grid.innerHTML += `
+        <div class="card" onclick="viewProfile(${i})">
+          <div class="card-number">#${i}</div>
+          <div class="card-avatar">${avatarContent}</div>
+          <div class="card-name">${p.nick || p.name.split(' ')[0]}</div>
+          <div class="card-role">${p.role || 'สมาชิก'}</div>
+          ${tags.length ? `<div class="card-tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+        </div>`;
+    }
+  }
+
+  document.getElementById('count-filled').textContent = filled;
+}
+
+function filterCards(val) { renderGrid(val); }
+
+// ===== MODALS =====
+let currentEditSlot = null;
+let viewingSlot = null;
+
+function openAddModal(slot = null) {
+  // reset form
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-nick').value = '';
+  document.getElementById('f-role').value = '';
+  document.getElementById('f-company').value = '';
+  document.getElementById('f-interests').value = '';
+  document.getElementById('f-goal').value = '';
+  document.getElementById('f-funfact').value = '';
+  document.getElementById('f-contact').value = '';
+  document.getElementById('f-emoji').value = '👤';
+  document.getElementById('f-photo-data').value = '';
+  document.getElementById('f-photo').value = '';
+  const preview = document.getElementById('avatar-preview');
+  preview.innerHTML = '👤';
+  document.querySelectorAll('.emoji-opt').forEach(el => el.classList.remove('selected'));
+
+  if (slot && profiles[slot]) {
+    const p = profiles[slot];
+    document.getElementById('f-name').value = p.name || '';
+    document.getElementById('f-nick').value = p.nick || '';
+    document.getElementById('f-role').value = p.role || '';
+    document.getElementById('f-company').value = p.company || '';
+    document.getElementById('f-interests').value = p.interests || '';
+    document.getElementById('f-goal').value = p.goal || '';
+    document.getElementById('f-funfact').value = p.funfact || '';
+    document.getElementById('f-contact').value = p.contact || '';
+    document.getElementById('f-emoji').value = p.emoji || '👤';
+    document.getElementById('f-photo-data').value = p.photo || '';
+    if (p.photo) {
+      preview.innerHTML = `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      preview.innerHTML = p.emoji || '👤';
+      selectEmoji(p.emoji || '👤');
+    }
+    document.getElementById('modal-form-title').textContent = `✦ แก้ไขโปรไฟล์ #${slot}`;
+  } else {
+    document.getElementById('modal-form-title').textContent = '✦ เพิ่มโปรไฟล์ของคุณ';
+  }
+
+  document.getElementById('f-slot').value = slot || '';
+  currentEditSlot = slot;
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+async function saveProfile() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('กรุณากรอกชื่อ-นามสกุล'); return; }
+
+  // find slot
+  let slot = parseInt(document.getElementById('f-slot').value);
+  if (!slot) {
+    // find next empty
+    for (let i = 1; i <= TOTAL; i++) {
+      if (!profiles[i]) { slot = i; break; }
+    }
+    if (!slot) { showToast('กลุ่มเต็มแล้ว (25/25)'); return; }
+  }
+
+  profiles[slot] = {
+    name,
+    nick: document.getElementById('f-nick').value.trim(),
+    role: document.getElementById('f-role').value.trim(),
+    company: document.getElementById('f-company').value.trim(),
+    interests: document.getElementById('f-interests').value.trim(),
+    goal: document.getElementById('f-goal').value.trim(),
+    funfact: document.getElementById('f-funfact').value.trim(),
+    contact: document.getElementById('f-contact').value.trim(),
+    emoji: document.getElementById('f-emoji').value || '👤',
+    photo: document.getElementById('f-photo-data').value || '',
+  };
+
+  await saveProfiles(slot);
+  renderGrid();
+  closeModal('add-modal');
+  showToast('✓ บันทึกโปรไฟล์เรียบร้อย!');
+}
+
+function viewProfile(slot) {
+  const p = profiles[slot];
+  if (!p) { openAddModal(slot); return; }
+  viewingSlot = slot;
+
+  const tags = (p.interests || '').split(',').map(t => t.trim()).filter(Boolean);
+
+  const viewAvatarContent = p.photo
+    ? `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;">`
+    : (p.emoji || '👤');
+
+  document.getElementById('view-content').innerHTML = `
+    <div class="profile-view">
+      <div class="profile-view-avatar">${viewAvatarContent}</div>
+      <div class="profile-view-name">${p.name}</div>
+      <div class="profile-view-role">${p.role || 'สมาชิก'}${p.company ? ` · ${p.company}` : ''}</div>
+      <div class="profile-info-grid">
+        <div class="profile-info-item">
+          <div class="profile-info-label">ชื่อเล่น</div>
+          <div class="profile-info-value">${p.nick || '-'}</div>
+        </div>
+        <div class="profile-info-item">
+          <div class="profile-info-label">เป้าหมาย</div>
+          <div class="profile-info-value">${p.goal || '-'}</div>
+        </div>
+      </div>
+      ${tags.length ? `<div class="card-tags" style="justify-content:center;margin-bottom:14px">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      ${p.funfact ? `<div class="profile-funfact"><div class="profile-funfact-label">✨ Fun Fact</div>${p.funfact}</div>` : ''}
+      ${p.contact ? `<div class="profile-funfact"><div class="profile-funfact-label">📱 ช่องทางติดต่อ</div><div class="profile-contact">${p.contact}</div></div>` : ''}
+    </div>
+  `;
+
+  document.getElementById('view-modal').classList.add('open');
+}
+
+function editFromView() {
+  closeModal('view-modal');
+  setTimeout(() => openAddModal(viewingSlot), 200);
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ===== INIT =====
+initEmojiPicker();
+loadProfiles();
+</script>
+
+</body>
+</html>
