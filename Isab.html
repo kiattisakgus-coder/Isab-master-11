@@ -718,73 +718,27 @@ drawBg();
 
 // ===== DATA =====
 const TOTAL = 30;
-const AT_TOKEN = 'pat0ErRAoY0xCy2po.9feea28b8cfef62eae71c2dbf207f2bfce9c3460868e74a55adae1b776ad4e3e';
-const AT_BASE = 'appont3DUzrY3w8CI';
-const AT_TABLE = 'tblaZ1lrdFxlg0w';
-const AT_URL = `https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
-const AT_HEADERS = { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' };
+const FB_URL = 'https://isab-master-11-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 let profiles = {};
-let recordMap = {}; // slot -> airtable record id
 
 async function loadProfiles() {
   try {
     showToast('⏳ กำลังโหลดข้อมูล...');
-    let offset = '';
-    let allRecords = [];
-    do {
-      const url = AT_URL + '?pageSize=100' + (offset ? `&offset=${offset}` : '');
-      const res = await fetch(url, { headers: AT_HEADERS });
-      const data = await res.json();
-      if (data.records) allRecords = allRecords.concat(data.records);
-      offset = data.offset || '';
-    } while (offset);
-
-    profiles = {};
-    recordMap = {};
-    allRecords.forEach(rec => {
-      const f = rec.fields;
-      const slot = parseInt(f.slot);
-      if (slot) {
-        profiles[slot] = {
-          name: f.name || '', nick: f.nick || '', role: f.role || '',
-          company: f.company || '', interests: f.interests || '',
-          goal: f.goal || '', funfact: f.funfact || '',
-          contact: f.contact || '', emoji: f.emoji || '👤', photo: f.photo || ''
-        };
-        recordMap[slot] = rec.id;
-      }
-    });
-  } catch (e) { console.error(e); }
+    const res = await fetch(`${FB_URL}/profiles.json`);
+    const data = await res.json();
+    profiles = data || {};
+  } catch (e) { console.error(e); profiles = {}; }
   renderGrid();
 }
 
 async function saveProfiles(slot) {
-  const p = profiles[slot];
-  const fields = {
-    slot: String(slot), name: p.name, nick: p.nick, role: p.role,
-    company: p.company, interests: p.interests, goal: p.goal,
-    funfact: p.funfact, contact: p.contact, emoji: p.emoji, photo: p.photo
-  };
-
   try {
-    if (recordMap[slot]) {
-      // UPDATE existing record
-      await fetch(`${AT_URL}/${recordMap[slot]}`, {
-        method: 'PATCH',
-        headers: AT_HEADERS,
-        body: JSON.stringify({ fields })
-      });
-    } else {
-      // CREATE new record
-      const res = await fetch(AT_URL, {
-        method: 'POST',
-        headers: AT_HEADERS,
-        body: JSON.stringify({ fields })
-      });
-      const data = await res.json();
-      if (data.id) recordMap[slot] = data.id;
-    }
+    await fetch(`${FB_URL}/profiles/${slot}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profiles[slot])
+    });
   } catch (e) { console.error(e); showToast('❌ บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง'); }
 }
 
